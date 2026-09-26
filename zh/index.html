@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salary to Hourly Calculator — Convert Annual Salary to Hourly Wage (2026)</title>
+<meta name="description" content="Free salary to hourly calculator. Convert annual salary to hourly wage, or hourly rate to yearly income. Includes weekly, biweekly, semi-monthly, and monthly breakdowns.">
+<meta name="keywords" content="salary to hourly calculator, hourly to salary, annual salary to hourly wage, $25 an hour is how much a year, hourly rate calculator">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" content="#064e3b">
+
+<link rel="canonical" href="https://toolara.dev/salary-to-hourly/zh/">
+<link rel="alternate" hreflang="en" href="https://toolara.dev/salary-to-hourly/">
+<link rel="alternate" hreflang="zh-Hans" href="https://toolara.dev/salary-to-hourly/zh/">
+<link rel="alternate" hreflang="x-default" href="https://toolara.dev/salary-to-hourly/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Salary to Hourly Calculator — Convert Annual Salary to Hourly Wage">
+<meta property="og:description" content="Convert salary to hourly wage instantly. Includes weekly, biweekly, and monthly breakdowns.">
+<meta property="og:url" content="https://toolara.dev/salary-to-hourly/zh/">
+<meta property="og:locale" content="en_US">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Salary to Hourly Calculator",
+  "url": "https://toolara.dev/salary-to-hourly/zh/",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "description": "Free salary to hourly calculator that converts annual salary to hourly wage and vice versa.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+
+<script>window.__FORCE_LANG__ = 'zh';</script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="lang-switch">
+    <select id="langSelect" onchange="setLang(this.value)" aria-label="Language">
+      <option value="en">English</option>
+      <option value="zh">简体中文</option>
+    </select>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-badge">💼 Pay & Compensation</div>
+    <h1 data-i18n="title">Salary to Hourly Calculator</h1>
+    <p data-i18n="subtitle">Convert annual salary to hourly wage — or hourly rate to yearly income. Includes all pay frequencies.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="card">
+    <h2 class="visually-hidden" data-i18n="calcHeading">Calculator</h2>
+
+    <div class="mode-tabs">
+      <button class="mode-tab active" data-mode="salary" onclick="switchMode('salary')" data-i18n="modeSalary">Salary → Hourly</button>
+      <button class="mode-tab" data-mode="hourly" onclick="switchMode('hourly')" data-i18n="modeHourly">Hourly → Salary</button>
+    </div>
+
+    <!-- Salary to Hourly -->
+    <div id="mode-salary" class="mode-panel">
+      <label for="annualSalary" data-i18n="annualSalaryLabel">Annual salary ($)</label>
+      <input type="number" id="annualSalary" min="0" step="1000" placeholder="52000" value="52000" inputmode="decimal">
+    </div>
+
+    <!-- Hourly to Salary -->
+    <div id="mode-hourly" class="mode-panel" style="display:none;">
+      <label for="hourlyRate" data-i18n="hourlyRateLabel">Hourly rate ($)</label>
+      <input type="number" id="hourlyRate" min="0" step="0.25" placeholder="25" value="25" inputmode="decimal">
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="hoursPerWeek" data-i18n="hoursPerWeekLabel">Hours per week</label>
+        <input type="number" id="hoursPerWeek" min="1" max="168" step="1" placeholder="40" value="40" inputmode="numeric">
+      </div>
+      <div>
+        <label for="weeksPerYear" data-i18n="weeksPerYearLabel">Weeks per year</label>
+        <input type="number" id="weeksPerYear" min="1" max="52" step="1" placeholder="52" value="52" inputmode="numeric">
+      </div>
+    </div>
+
+    <details class="advanced">
+      <summary data-i18n="advancedLabel">Advanced options</summary>
+      <label for="ptoWeeks" data-i18n="ptoLabel">Paid time off (weeks)</label>
+      <input type="number" id="ptoWeeks" min="0" max="20" step="0.5" placeholder="0" value="0" inputmode="decimal">
+      <p class="hint" data-i18n="ptoHint">If you get paid vacation, enter the number of weeks. These weeks still count as paid hours.</p>
+    </details>
+
+    <button class="calc" type="button" onclick="calculate()" data-i18n="calcBtn">Calculate</button>
+
+    <div id="result" role="region" aria-live="polite">
+      <div class="result-hero">
+        <div class="result-label" id="resultLabel">—</div>
+        <div class="result-main" id="resultMain">—</div>
+        <div class="result-sub" id="resultSub"></div>
+      </div>
+
+      <div class="breakdown-title" data-i18n="breakdownTitle">Pay breakdown</div>
+      <div class="breakdown">
+        <div class="bd-row"><span data-i18n="bdHourly">Hourly</span><strong id="bdHourly">—</strong></div>
+        <div class="bd-row"><span data-i18n="bdDaily">Daily (8h)</span><strong id="bdDaily">—</strong></div>
+        <div class="bd-row"><span data-i18n="bdWeekly">Weekly</span><strong id="bdWeekly">—</strong></div>
+        <div class="bd-row"><span data-i18n="bdBiweekly">Bi-weekly (26)</span><strong id="bdBiweekly">—</strong></div>
+        <div class="bd-row"><span data-i18n="bdSemimonthly">Semi-monthly (24)</span><strong id="bdSemimonthly">—</strong></div>
+        <div class="bd-row"><span data-i18n="bdMonthly">Monthly (12)</span><strong id="bdMonthly">—</strong></div>
+        <div class="bd-divider"></div>
+        <div class="bd-row bd-total"><span data-i18n="bdAnnual">Annual (gross)</span><strong id="bdAnnual">—</strong></div>
+        <div class="bd-row bd-sub"><span data-i18n="bdTotalHours">Total hours per year</span><strong id="bdTotalHours">—</strong></div>
+      </div>
+
+      <div class="share-row">
+        <button class="share-btn" type="button" onclick="copyShareLink()" data-i18n="shareBtn">Copy shareable link</button>
+        <span class="share-copied" id="shareCopied" data-i18n="shareCopied">Copied!</span>
+      </div>
+
+      <div class="result-disclaimer" data-i18n="resultDisclaimer">Gross pay only — does not include taxes, deductions, or overtime. For take-home estimates, use a paycheck calculator with your state and filing status.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-i18n="commonTitle">Common conversions at 40 hours/week</h2>
+    <p data-i18n="commonText">The table below shows the annual, monthly, and weekly equivalents for common hourly rates, assuming 40 hours per week and 52 weeks per year (2,080 hours).</p>
+    <table>
+      <thead>
+        <tr>
+          <th data-i18n="thHourly">Hourly</th>
+          <th data-i18n="thWeekly">Weekly</th>
+          <th data-i18n="thMonthly">Monthly</th>
+          <th data-i18n="thAnnual">Annual</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>$10/hr</td><td>$400</td><td>$1,733</td><td>$20,800</td></tr>
+        <tr><td>$12/hr</td><td>$480</td><td>$2,080</td><td>$24,960</td></tr>
+        <tr><td>$15/hr</td><td>$600</td><td>$2,600</td><td>$31,200</td></tr>
+        <tr><td>$18/hr</td><td>$720</td><td>$3,120</td><td>$37,440</td></tr>
+        <tr><td>$20/hr</td><td>$800</td><td>$3,467</td><td>$41,600</td></tr>
+        <tr><td>$22/hr</td><td>$880</td><td>$3,813</td><td>$45,760</td></tr>
+        <tr><td>$25/hr</td><td>$1,000</td><td>$4,333</td><td>$52,000</td></tr>
+        <tr><td>$30/hr</td><td>$1,200</td><td>$5,200</td><td>$62,400</td></tr>
+        <tr><td>$35/hr</td><td>$1,400</td><td>$6,067</td><td>$72,800</td></tr>
+        <tr><td>$40/hr</td><td>$1,600</td><td>$6,933</td><td>$83,200</td></tr>
+        <tr><td>$50/hr</td><td>$2,000</td><td>$8,667</td><td>$104,000</td></tr>
+        <tr><td>$75/hr</td><td>$3,000</td><td>$13,000</td><td>$156,000</td></tr>
+        <tr><td>$100/hr</td><td>$4,000</td><td>$17,333</td><td>$208,000</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2 data-i18n="formulaTitle">The formula</h2>
+    <ul>
+      <li data-i18n="formula1"><strong>Annual salary → hourly rate:</strong> Annual ÷ (Hours per week × Weeks per year)</li>
+      <li data-i18n="formula2"><strong>Hourly rate → annual salary:</strong> Hourly × Hours per week × Weeks per year</li>
+      <li data-i18n="formula3"><strong>Weekly pay:</strong> Hourly × Hours per week</li>
+      <li data-i18n="formula4"><strong>Monthly pay:</strong> Annual ÷ 12</li>
+      <li data-i18n="formula5"><strong>Bi-weekly pay:</strong> Annual ÷ 26</li>
+    </ul>
+    <p data-i18n="formulaNote">Standard full-time work assumes <strong>2,080 hours per year</strong> (40 hours × 52 weeks). If you get paid time off, your effective working weeks are lower but your annual salary stays the same — the calculator handles this when you enter PTO weeks.</p>
+  </section>
+
+  <section>
+    <h2 data-i18n="howToTitle">How to use this calculator</h2>
+    <ol>
+      <li data-i18n="howTo1">Choose your direction: Salary → Hourly, or Hourly → Salary.</li>
+      <li data-i18n="howTo2">Enter your annual salary or hourly rate.</li>
+      <li data-i18n="howTo3">Adjust hours per week (default 40) and weeks per year (default 52).</li>
+      <li data-i18n="howTo4">If you receive paid vacation, expand Advanced options and enter PTO weeks.</li>
+      <li data-i18n="howTo5">Click "Calculate" to see the full breakdown across all pay frequencies.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2 data-i18n="faqTitle">Frequently asked questions</h2>
+    <h3 data-i18n="faq1q">$25 an hour is how much a year?</h3>
+    <p data-i18n="faq1a">At 40 hours per week and 52 weeks per year, $25/hour equals <strong>$52,000 per year</strong>, or $4,333 per month and $1,000 per week.</p>
+
+    <h3 data-i18n="faq2q">$50,000 a year is how much an hour?</h3>
+    <p data-i18n="faq2a">A $50,000 annual salary works out to <strong>$24.04 per hour</strong> at 40 hours per week and 52 weeks per year.</p>
+
+    <h3 data-i18n="faq3q">What is the difference between salary and hourly?</h3>
+    <p data-i18n="faq3a">Salaried employees receive a fixed annual amount regardless of hours worked, and often receive benefits like paid time off and health insurance. Hourly employees are paid per hour worked, may receive overtime (1.5× rate above 40 hours/week in the US), but typically have less predictable income.</p>
+
+    <h3 data-i18n="faq4q">How many hours are in a work year?</h3>
+    <p data-i18n="faq4a">A standard full-time work year is <strong>2,080 hours</strong> (40 hours × 52 weeks). Some employers calculate based on 2,000 hours (50 weeks) to account for two weeks of unpaid time off.</p>
+
+    <h3 data-i18n="faq5q">Does this include taxes?</h3>
+    <p data-i18n="faq5a">No. This calculator shows gross pay only. Your actual take-home pay will be lower after federal income tax, state tax, Social Security, and Medicare. Use a paycheck calculator for your state to estimate net pay.</p>
+
+    <h3 data-i18n="faq6q">How do I calculate my hourly rate for a freelance project?</h3>
+    <p data-i18n="faq6a">Freelancers should target an hourly rate that covers not just working hours, but also admin time, taxes, insurance, and unpaid time off. A common rule of thumb: aim for 2-3× the hourly rate of a comparable salaried position.</p>
+
+    <div class="disclaimer" data-i18n="disclaimer"><strong>Disclaimer:</strong> This calculator provides estimates for informational purposes. Actual pay may vary based on overtime, bonuses, benefits, and employer-specific policies. Always verify with your employer or payroll provider.</div>
+  </section>
+</main>
+
+<footer class="footer" data-i18n="footer">Runs entirely in your browser. No data is collected or stored.</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/calculator.js"></script>
+</body>
+</html>
